@@ -36,5 +36,5 @@ def get_the_latest_titles():
 def main_handler(event, context):
     return {
         'statusCode': 200,
-        'body': json.dumps(dict(latest_comics=get_the_latest_titles()))
+        'body': dict(latest_comics=get_the_latest_titles())
     }
