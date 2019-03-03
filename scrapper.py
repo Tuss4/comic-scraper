@@ -28,11 +28,5 @@ def get_the_latest_titles():
     page = urllib.request.urlopen(url).read()
     soup = BeautifulSoup(page, 'html.parser')
     titles = soup.findAll('h5')
-    # for title in titles:
-    #     print(title.text.strip())
     latest = [title.text.strip() for title in titles]
     return latest
-
-
-if __name__ == "__main__":
-    print(get_the_latest_titles())
