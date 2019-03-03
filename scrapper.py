@@ -8,7 +8,6 @@ ADDR = "https://www.marvel.com/comics/calendar/week/2019-02-24?byZone=marvel_sit
 def get_the_latest_titles():
     page = urllib.request.urlopen(ADDR).read()
     soup = BeautifulSoup(page, 'html.parser')
-    # titles = soup.findAll('div', attrs={'class': 'row-item-text'})
     titles = soup.findAll('h5')
     for title in titles:
         print(title.text.strip())
