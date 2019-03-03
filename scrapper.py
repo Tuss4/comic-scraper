@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import urllib.request
 from datetime import timedelta, date
+import json
 
 
 DATE_FMT = "%Y-%m-%d"
@@ -30,3 +31,10 @@ def get_the_latest_titles():
     titles = soup.findAll('h5')
     latest = [title.text.strip() for title in titles]
     return latest
+
+
+def main_handler(event, context):
+    return {
+        'statusCode': 200,
+        'body': json.dumps(dict(latest_comics=get_the_latest_titles()))
+    }
