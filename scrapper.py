@@ -17,7 +17,7 @@ def get_sun_to_sat():
     if dow_int == 0:
         sunday = date.today()
     else:
-        sunday = date.today - timedelta(days=dow_int)
+        sunday = date.today() - timedelta(days=dow_int)
     saturday = sunday + timedelta(days=6)
     fmt_sun = sunday.strftime(DATE_FMT)
     fmt_sat =  saturday.strftime(DATE_FMT)
@@ -34,7 +34,8 @@ def get_the_latest_titles():
 
 
 def main_handler(event, context):
+    sunday = get_sun_to_sat()[0]
     return {
         'statusCode': 200,
-        'body': dict(latest_comics=get_the_latest_titles())
+        'body': dict(latest_comics=get_the_latest_titles(), week_of=sunday)
     }
