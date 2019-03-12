@@ -58,7 +58,7 @@ def get_the_latest_titles():
 
 
 def get_latest_titles_str():
-    return ", ".join(get_the_latest_titles()
+    return ", ".join(get_the_latest_titles())
 
 
 # Skill classes and functions
