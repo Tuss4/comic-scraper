@@ -52,12 +52,13 @@ def get_the_latest_titles():
     soup = BeautifulSoup(page, 'html.parser')
     titles = soup.findAll('h5')
     latest = [title.text.strip() for title in titles]
-    return latest
+    # SSML does not support '&' sanitize accordingly
+    clean = [l.replace('&', 'and') for l in latest]
+    return clean
 
 
 def get_latest_titles_str():
-    return ", ".join(get_the_latest_titles()[:2])
-    # return get_the_latest_titles()[-1]
+    return ", ".join(get_the_latest_titles()
 
 
 # Skill classes and functions
@@ -148,6 +149,7 @@ class SessionEndedRequestHandler(AbstractRequestHandler):
 
         logger.info("Session ended reason: {}".format(
             handler_input.request_envelope.request.reason))
+        logger.info("Envelope: {}".format(handler_input.request_envelope.to_str()))
         return handler_input.response_builder.response
 
 
