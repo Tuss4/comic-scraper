@@ -56,8 +56,8 @@ def get_the_latest_titles():
 
 
 def get_latest_titles_str():
-    # return ', '.join(get_the_latest_titles()[:5])
-    return get_the_latest_titles()[-1]
+    return ", ".join(get_the_latest_titles()[:2])
+    # return get_the_latest_titles()[-1]
 
 
 # Skill classes and functions
@@ -151,13 +151,13 @@ class SessionEndedRequestHandler(AbstractRequestHandler):
         return handler_input.response_builder.response
 
 
-class CatchAllExcetionHandler(AbstractExceptionHandler):
+class CatchAllExceptionHandler(AbstractExceptionHandler):
 
     def can_handle(self, handler_input, exception):
         return True
 
     def handle(self, handler_input, exception):
-        logger.info("In CatchAllExcetionHandler")
+        logger.info("In CatchAllExceptionHandler")
         logger.error(exception, exc_info=True)
 
         handler_input.response_builder.speak(EXCEPTION_MESSAGE).ask(
@@ -189,6 +189,6 @@ sb.add_request_handler(FallbackIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())
 
 # Register exception handlers
-sb.add_exception_handler(CatchAllExcetionHandler())
+sb.add_exception_handler(CatchAllExceptionHandler())
 
 lambda_handler = sb.lambda_handler()
