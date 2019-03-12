@@ -9,10 +9,16 @@ __pycache__/
 # C extensions
 *.so
 
+# Audio
+*.aup
+*.mp3
+*.m4a
+
 # Distribution / packaging
 .Python
 build/
 develop-eggs/
+
 package/
 dist/
 downloads/
