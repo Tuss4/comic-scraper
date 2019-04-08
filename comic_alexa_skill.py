@@ -6,8 +6,10 @@ from ask_sdk_core.dispatch_components import (
 )
 from ask_sdk_core.utils import is_request_type, is_intent_name
 
-from ask_sdk_model.ui import SimpleCard
+from ask_sdk_model.ui import SimpleCard, StandardCard
 from ask_sdk_model import Response
+
+from dccomics import get_title_str as get_dc_title_str
 
 import urllib.request
 from datetime import timedelta, date
@@ -17,6 +19,8 @@ import logging
 # Default intent globals
 LAUNCH_MESSAGE = "So... you tryin ta hear what's new or naw?"
 SKILL_NAME = "Latest Comics"
+ASK_MESSAGE = "Which publisher?"
+ASK_REPROMPT = "Marvel or DC?"
 GET_COMICS_MESSAGE = "Here are the comics on sale this week, play-yah: "
 # GET_COMICS_MESSAGE = "<audio src='https://s3-us-west-2.amazonaws.com/tuss4alexaskillaudioclips/new_comics.mp3' />"
 HELP_MESSAGE = "You can say new comics, or, you can sayy exit... wassup?"
@@ -71,31 +75,33 @@ logger.setLevel(logging.DEBUG)
 class WelcomeHandler(AbstractRequestHandler):
 
     def can_handle(self, handler_input):
-        return is_request_type("LaunchRequest")(handler_input)
+        return(is_request_type("LaunchRequest")(handler_input))
 
     def handle(self, handler_input):
         logger.info("In WelcomeHandler")
-        speech = LAUNCH_MESSAGE
-        handler_input.response_builder.speak(speech).set_card(
-            SimpleCard(SKILL_NAME, speech))
+        speech = "Welcome to {}!".format(SKILL_NAME)
+        handler_input.response_builder.speak(speech).ask(ASK_REPROMPT).set_card(SimpleCard(SKILL_NAME, speech))
+
         return handler_input.response_builder.response
 
 
 class LatestComicsHandler(AbstractRequestHandler):
 
     def can_handle(self, handler_input):
-        return (is_request_type("LaunchRequest")(handler_input) or
-                is_intent_name("LatestComicsHandler")(handler_input))
-        # return is_intent_name("LatestComicsHandler")(handler_input)
+        return is_intent_name("LatestComicsIntent")(handler_input)
 
     def handle(self, handler_input):
         logger.info("In LatestComicsHandler")
 
-        data = get_latest_titles_str()
-        speech = GET_COMICS_MESSAGE + data
+        slots = handler_input.request_envelope.request.intent.slots
+        logger.info("GIVE ME SLOTS: ", slots)
+
+
+        # data = get_latest_titles_str()
+        speech = ASK_MESSAGE
         # speech = GET_COMICS_MESSAGE
         logger.info(speech)
-        handler_input.response_builder.speak(speech).set_card(SimpleCard(SKILL_NAME, speech))
+        handler_input.response_builder.speak(speech).ask(ASK_REPROMPT).set_card(SimpleCard(SKILL_NAME, speech))
 
         return handler_input.response_builder.response
 
@@ -149,7 +155,7 @@ class SessionEndedRequestHandler(AbstractRequestHandler):
 
         logger.info("Session ended reason: {}".format(
             handler_input.request_envelope.request.reason))
-        logger.info("Envelope: {}".format(handler_input.request_envelope.to_str()))
+        # logger.info("Envelope: {}".format(handler_input.request_envelope.to_str()))
         return handler_input.response_builder.response
 
 
@@ -160,6 +166,7 @@ class CatchAllExceptionHandler(AbstractExceptionHandler):
 
     def handle(self, handler_input, exception):
         logger.info("In CatchAllExceptionHandler")
+        logger.info("Exception Envelope: {}".format(handler_input.request_envelope.to_str()))
         logger.error(exception, exc_info=True)
 
         handler_input.response_builder.speak(EXCEPTION_MESSAGE).ask(
@@ -184,6 +191,7 @@ class ResponseLogger(AbstractResponseInterceptor):
 
 # Register intent handlers
 # sb.add_request_handler(WelcomeHandler())
+sb.add_request_handler(WelcomeHandler())
 sb.add_request_handler(LatestComicsHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())

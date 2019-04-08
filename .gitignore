@@ -3,6 +3,11 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# deployment stuff
+compress.sh
+s3_upload.py
+local.env
+
 # Zip
 *.zip
 
