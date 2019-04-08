@@ -6,3 +6,4 @@ services:
     command: python main.py
     volumes:
             - .:/code:ro
+    env_file: local.env

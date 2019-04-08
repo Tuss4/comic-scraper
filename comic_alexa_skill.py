@@ -79,7 +79,7 @@ class WelcomeHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         logger.info("In WelcomeHandler")
-        speech = "Welcome to {}!".format(SKILL_NAME)
+        speech = "Welcome to {}! Your number 1 destination for hearing the latest comics on sale!".format(SKILL_NAME)
         handler_input.response_builder.speak(speech).ask(ASK_REPROMPT).set_card(SimpleCard(SKILL_NAME, speech))
 
         return handler_input.response_builder.response
